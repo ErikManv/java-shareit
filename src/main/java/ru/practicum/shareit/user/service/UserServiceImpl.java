@@ -26,16 +26,16 @@ public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Override
-    public List<UserDto> findAll(){
+    public List<UserDto> findAll() {
         List<UserDto> usersDto = new ArrayList<>();
-        for(User user: userStorage.findAll()) {
+        for (User user: userStorage.findAll()) {
             usersDto.add(UserMapper.toUserDto(user));
         }
         return usersDto;
     }
 
     @Override
-    public UserDto createUser(UserDto userDto){
+    public UserDto createUser(UserDto userDto) {
             User user = UserMapper.toUser(userDto);
             emailIsUniq(user, userDto.getId());
             log.info("пользователь {} добавлен", userDto.getName());
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(UserDto userDto, Integer userId){
+    public UserDto updateUser(UserDto userDto, Integer userId) {
             containsUser(userId);
             User user = UserMapper.toUser(userDto);
             emailIsUniq(user, userId);
@@ -63,8 +63,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private void emailIsUniq(User user, Integer userId) {
-        for(User user1: userStorage.findAll()) {
-            if(user1.getEmail().equals(user.getEmail()) && !user1.getId().equals(userId)) {
+        for (User user1: userStorage.findAll()) {
+            if (user1.getEmail().equals(user.getEmail()) && !user1.getId().equals(userId)) {
                 log.error("{} - данный email уже существует", user.getEmail());
                 throw new IllegalArgumentException("такой email уже существует");
             }

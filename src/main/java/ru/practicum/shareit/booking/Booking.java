@@ -9,7 +9,7 @@ public class Booking {
     Date dateStart;
     Date dateEnd;
     boolean status;
-    Integer ItemId;
+    Integer itemId;
     Integer userBookedId;
     Integer id;
 }

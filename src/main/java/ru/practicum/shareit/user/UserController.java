@@ -22,12 +22,12 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDto> findAll(){
+    public List<UserDto> findAll() {
         return userServiceImpl.findAll();
     }
 
     @PostMapping
-    public UserDto createUser(@Valid @RequestBody UserDto userDto){
+    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
         return userServiceImpl.createUser(userDto);
     }
 

@@ -29,9 +29,9 @@ public class ItemStorage {
 
     public ItemDto updateItem(ItemDto itemUp, Integer itemId) {
         Item item = items.get(itemId);
-        if(itemUp.getName() != null) item.setName(itemUp.getName());
-        if(itemUp.getDescription() != null) item.setDescription(itemUp.getDescription());
-        if(itemUp.getAvailable() != null) item.setAvailable(itemUp.getAvailable());
+        if (itemUp.getName() != null) item.setName(itemUp.getName());
+        if (itemUp.getDescription() != null) item.setDescription(itemUp.getDescription());
+        if (itemUp.getAvailable() != null) item.setAvailable(itemUp.getAvailable());
         return ItemMapper.toItemDto(item);
     }
 
@@ -41,8 +41,8 @@ public class ItemStorage {
 
     public List<ItemDto> personalItems(Integer userId) {
         List<ItemDto> itemList = new ArrayList<>();
-        for(Item item: items.values()) {
-            if(Objects.equals(item.getOwner().getId(), userId)) {
+        for (Item item: items.values()) {
+            if (Objects.equals(item.getOwner().getId(), userId)) {
                 itemList.add(ItemMapper.toItemDto(item));
             }
         }
@@ -52,8 +52,8 @@ public class ItemStorage {
     public List<ItemDto> search(String text) {
         String textNew = text.toLowerCase().trim();
         List<ItemDto> itemList = new ArrayList<>();
-        for(Item item: items.values()) {
-            if(item.getAvailable() &&
+        for (Item item: items.values()) {
+            if (item.getAvailable() &&
                     (item.getName().toLowerCase().contains(textNew)
                             || item.getDescription().toLowerCase().contains(textNew))) {
                 itemList.add(ItemMapper.toItemDto(item));

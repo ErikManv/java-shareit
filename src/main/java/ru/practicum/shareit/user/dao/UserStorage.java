@@ -12,35 +12,36 @@ import java.util.Map;
 public class UserStorage {
 
     private Integer userId = 0;
+
     private void countId() {
         userId++;
     }
 
     private final Map<Integer, User> users = new HashMap<>();
 
-    public List<User> findAll(){
+    public List<User> findAll() {
         return new ArrayList<>(users.values());
     }
 
-    public User createUser(User user){
+    public User createUser(User user) {
         countId();
         user.setId(userId);
         users.put(user.getId(), user);
         return user;
     }
 
-    public User updateUser(User userUpdate, Integer userId){
+    public User updateUser(User userUpdate, Integer userId) {
         User userOld = users.get(userId);
-        if(userUpdate.getName() != null) {
+        if (userUpdate.getName() != null) {
             userOld.setName(userUpdate.getName());
         }
-        if(userUpdate.getEmail() != null) {
+        if (userUpdate.getEmail() != null) {
             userOld.setEmail(userUpdate.getEmail());
         }
         return userOld;
     }
 
-    public User getUser(Integer userId){
+    public User getUser(Integer userId) {
         return users.get(userId);
     }
 
