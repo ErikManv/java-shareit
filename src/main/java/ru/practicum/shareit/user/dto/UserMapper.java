@@ -1,22 +1,17 @@
 package ru.practicum.shareit.user.dto;
 
+import org.mapstruct.InheritInverseConfiguration;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import ru.practicum.shareit.user.model.User;
 
-public class UserMapper {
+@Mapper
+public interface UserMapper {
 
-    public static UserDto toUserDto(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setName(user.getName());
-        userDto.setEmail(user.getEmail());
-        userDto.setId(user.getId());
-        return userDto;
-    }
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
-    public static User toUser(UserDto userDto) {
-        User user = new User();
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setId(userDto.getId());
-        return user;
-    }
+    UserDto toUserDto(User user);
+
+    @InheritInverseConfiguration
+    User toUser(UserDto userDto);
 }

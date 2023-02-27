@@ -16,7 +16,6 @@ public class ErrorHandler {
         @ExceptionHandler
         @ResponseStatus(HttpStatus.NOT_FOUND)
         public ErrorResponse handleItemValidationException(final ItemValidationException e) {
-            // возвращаем сообщение об ошибке
             return new ErrorResponse(
                     "Объект не найден", e.getMessage()
             );
@@ -25,7 +24,6 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleIllegalArgumentException(final IllegalArgumentException e) {
-        // возвращаем сообщение об ошибке
         return new ErrorResponse(
                 "Объект не найден", e.getMessage()
         );
@@ -34,7 +32,6 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleUserValidationException(final UserValidationException e) {
-        // возвращаем сообщение об ошибке
         return new ErrorResponse(
                 "Объект не найден", e.getMessage()
         );

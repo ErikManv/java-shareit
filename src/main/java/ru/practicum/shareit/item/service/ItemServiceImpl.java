@@ -1,8 +1,8 @@
 package ru.practicum.shareit.item.service;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ItemValidationException;
 import ru.practicum.shareit.exception.UserValidationException;
@@ -15,16 +15,11 @@ import ru.practicum.shareit.user.dao.UserStorage;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
     private final ItemStorage itemStorage;
     private final UserStorage userStorage;
-
-    @Autowired
-    public ItemServiceImpl(ItemStorage itemStorage, UserStorage userStorage) {
-        this.itemStorage = itemStorage;
-        this.userStorage = userStorage;
-    }
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -51,7 +46,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getItem(Integer itemId) {
         containsItem(itemId);
         log.info("предмет {} получен", itemId);
-        return ItemMapper.toItemDto(itemStorage.getItem(itemId));
+        return ItemMapper.INSTANCE.toItemDto(itemStorage.getItem(itemId));
     }
 
     @Override

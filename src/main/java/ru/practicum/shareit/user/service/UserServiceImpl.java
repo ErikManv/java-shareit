@@ -1,8 +1,8 @@
 package ru.practicum.shareit.user.service;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.UserController;
 import ru.practicum.shareit.user.dao.UserStorage;
@@ -14,14 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserStorage userStorage;
-
-    @Autowired
-    public UserServiceImpl(UserStorage userStorage) {
-        this.userStorage = userStorage;
-    }
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -29,32 +25,32 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> findAll() {
         List<UserDto> usersDto = new ArrayList<>();
         for (User user: userStorage.findAll()) {
-            usersDto.add(UserMapper.toUserDto(user));
+            usersDto.add(UserMapper.INSTANCE.toUserDto(user));
         }
         return usersDto;
     }
 
     @Override
     public UserDto createUser(UserDto userDto) {
-            User user = UserMapper.toUser(userDto);
+            User user = UserMapper.INSTANCE.toUser(userDto);
             emailIsUniq(user, userDto.getId());
             log.info("пользователь {} добавлен", userDto.getName());
-            return UserMapper.toUserDto(userStorage.createUser(user));
+            return UserMapper.INSTANCE.toUserDto(userStorage.createUser(user));
     }
 
     @Override
     public UserDto getUser(Integer userId) {
         containsUser(userId);
-        return UserMapper.toUserDto(userStorage.getUser(userId));
+        return UserMapper.INSTANCE.toUserDto(userStorage.getUser(userId));
     }
 
     @Override
     public UserDto updateUser(UserDto userDto, Integer userId) {
             containsUser(userId);
-            User user = UserMapper.toUser(userDto);
+            User user = UserMapper.INSTANCE.toUser(userDto);
             emailIsUniq(user, userId);
             log.info("пользователь {} обновлен", user.getName());
-            return UserMapper.toUserDto(userStorage.updateUser(user, userId));
+            return UserMapper.INSTANCE.toUserDto(userStorage.updateUser(user, userId));
     }
 
     @Override

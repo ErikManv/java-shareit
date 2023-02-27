@@ -6,9 +6,9 @@ import java.util.Date;
 
 @Data
 public class ItemRequest {
-    String name;
-    Integer id;
-    String disc;
-    String userRequestId;
-    Date dateOfRequest;
+    private String name;
+    private Integer id;
+    private String disc;
+    private String userRequestId;
+    private Date dateOfRequest;
 }

@@ -1,26 +1,17 @@
 package ru.practicum.shareit.item.dto;
 
+import org.mapstruct.*;
+import org.mapstruct.factory.Mappers;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.model.User;
 
-public class ItemMapper {
-    public static ItemDto toItemDto(Item item) {
-        ItemDto itemDto = new ItemDto();
-        itemDto.setId(item.getId());
-        itemDto.setName(item.getName());
-        itemDto.setDescription(item.getDescription());
-        itemDto.setAvailable(item.getAvailable());
-        return itemDto;
-    }
+@Mapper
+public interface ItemMapper {
 
-    public static Item toItem(ItemDto itemDto, User owner) {
-        Item item = new Item();
-        item.setId(itemDto.getId());
-        item.setOwner(owner);
-        item.setName(itemDto.getName());
-        item.setDescription(itemDto.getDescription());
-        item.setAvailable(itemDto.getAvailable());
-        return item;
-    }
+    ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
+
+    ItemDto toItemDto(Item item);
+
+    @InheritInverseConfiguration
+    Item toItem(ItemDto itemDto);
+
 }
-
