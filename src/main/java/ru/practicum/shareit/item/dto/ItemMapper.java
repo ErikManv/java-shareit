@@ -1,13 +1,10 @@
 package ru.practicum.shareit.item.dto;
 
 import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
 import ru.practicum.shareit.item.model.Item;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ItemMapper {
-
-    ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
 
     ItemDto toItemDto(Item item);
 

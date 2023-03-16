@@ -1,14 +1,22 @@
 package ru.practicum.shareit.request;
 
 import lombok.Data;
+import ru.practicum.shareit.user.model.User;
 
-import java.util.Date;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "requests")
 @Data
 public class ItemRequest {
-    private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String disc;
-    private String userRequestId;
-    private Date dateOfRequest;
+
+    @Column(name = "description")
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
