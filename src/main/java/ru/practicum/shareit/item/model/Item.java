@@ -29,6 +29,6 @@ public class Item {
     @Column(name = "is_available")
     private Boolean available;
 
-    @Column(name="request_id")
+    @Column(name ="request_id")
     private Integer request;
 }

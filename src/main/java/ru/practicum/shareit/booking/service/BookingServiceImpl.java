@@ -116,10 +116,10 @@ class BookingServiceImpl implements BookingService  {
 
     private List<BookingDto> mapListToDto(List<Booking> bookingList) {
         return bookingList.stream()
-                .map(bookingMapper :: toBookingDto)
+                .map(bookingMapper:: toBookingDto)
                 .collect(Collectors.toList());
     }
-    
+
     private  List<BookingDto> getBookingsList(List<Booking> bookingList, String state) {
         LocalDateTime now = LocalDateTime.now();
         switch (state) {
@@ -127,23 +127,23 @@ class BookingServiceImpl implements BookingService  {
                 return mapListToDto(bookingList);
             case "CURRENT":
                 return mapListToDto(bookingList).stream()
-                        .filter(x-> x.getStart().isBefore(now) && x.getEnd().isAfter(now))
+                        .filter(x -> x.getStart().isBefore(now) && x.getEnd().isAfter(now))
                         .collect(Collectors.toList());
             case "PAST":
                 return mapListToDto(bookingList).stream()
-                        .filter(x-> x.getEnd().isBefore(now))
+                        .filter(x -> x.getEnd().isBefore(now))
                         .collect(Collectors.toList());
             case "FUTURE":
                 return mapListToDto(bookingList).stream()
-                        .filter(x-> x.getStart().isAfter(now))
+                        .filter(x -> x.getStart().isAfter(now))
                         .collect(Collectors.toList());
             case "WAITING":
                 return mapListToDto(bookingList).stream()
-                        .filter(x-> x.getStatus().equals(Status.WAITING))
+                        .filter(x -> x.getStatus().equals(Status.WAITING))
                         .collect(Collectors.toList());
             case "REJECTED":
                 return mapListToDto(bookingList).stream()
-                        .filter(x-> x.getStatus().equals(Status.REJECTED))
+                        .filter(x -> x.getStatus().equals(Status.REJECTED))
                         .collect(Collectors.toList());
             default:
                 throw new StatusDoesntExistException(state);

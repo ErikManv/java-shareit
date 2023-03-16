@@ -74,7 +74,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getItemById(Integer itemId, Integer userId) {
         Item item = getItem(itemId);
         log.info("предмет {} получен", itemId);
-        if(item.getOwner().getId().equals(userId)) {
+        if (item.getOwner().getId().equals(userId)) {
             return setCommentToItem(setBookingToItem(itemMapper.toItemDto(getItem(itemId))));
         }
         return setCommentToItem(itemMapper.toItemDto(getItem(itemId)));
@@ -83,7 +83,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> personalItems(Integer userId) {
         List<ItemDto> itemList = new ArrayList<>();
-        for(Item i: itemRepository.findByOwner(userService.getUser(userId))){
+        for (Item i: itemRepository.findByOwner(userService.getUser(userId))) {
             itemList.add(setCommentToItem(setBookingToItem(itemMapper.toItemDto(i))));
         }
         log.info("список для пользователя {} получен", userId);
@@ -143,8 +143,8 @@ public class ItemServiceImpl implements ItemService {
         lastAndNextBookings.add(1, null);
         LocalDateTime now = LocalDateTime.now();
         List<Booking> itemBookings = bookingRepository.findAllByItem_Id(itemDto.getId());
-        if(itemBookings.size() == 1) {
-            if(itemBookings.get(0).getStart().isBefore(now) && !itemBookings.get(0).getStatus().equals(REJECTED)) {
+        if (itemBookings.size() == 1) {
+            if (itemBookings.get(0).getStart().isBefore(now) && !itemBookings.get(0).getStatus().equals(REJECTED)) {
                 lastAndNextBookings.add(0, bookingLinkMapper.toDto(itemBookings.get(0)));
                 return lastAndNextBookings;
             } else if (itemBookings.get(0).getStart().isAfter(now) && !itemBookings.get(0).getStatus().equals(REJECTED)) {
