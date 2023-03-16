@@ -25,14 +25,14 @@ CREATE TABLE IF NOT EXISTS comments
     text VARCHAR(1000),
     author_id INTEGER NOT NULL ,
     item_id INTEGER NOT NULL ,
-    created TIMESTAMP NOT NULL,
+    created TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT fk_comments_to_users FOREIGN KEY(author_id) REFERENCES users(id),
     CONSTRAINT fk_comments_to_item FOREIGN KEY(item_id) REFERENCES items(id));
 
 CREATE TABLE IF NOT EXISTS bookings
 ( id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    start_date TIMESTAMP NOT NULL ,
-    end_date TIMESTAMP NOT NULL ,
+    start_date TIMESTAMP WITHOUT TIME ZONE ,
+    end_date TIMESTAMP WITHOUT TIME ZONE ,
     booker_id INTEGER NOT NULL ,
     item_id INTEGER NOT NULL ,
     status varchar(20) NOT NULL ,
