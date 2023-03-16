@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.service;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dao.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingLinkDto;
@@ -30,6 +31,7 @@ import static ru.practicum.shareit.booking.model.Status.REJECTED;
 
 @Service
 @RequiredArgsConstructor
+@Primary
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
