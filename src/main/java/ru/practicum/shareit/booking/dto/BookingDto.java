@@ -16,9 +16,11 @@ public class BookingDto {
     private final Integer id;
 
     @FutureOrPresent(message = "start не может быть раньше текущего времени ")
+    @NotNull
     private final LocalDateTime start;
 
     @Future(message = "end должен быть позже start")
+    @NotNull
     private final LocalDateTime end;
 
     @NotNull
