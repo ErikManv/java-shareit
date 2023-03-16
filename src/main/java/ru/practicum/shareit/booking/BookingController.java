@@ -1,6 +1,9 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoShort;
@@ -20,33 +23,33 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public BookingDto addBooking(@NotEmpty @RequestHeader("X-Sharer-User-Id") Integer userId,
-                              @Valid @RequestBody BookingDtoShort bookingDtoShort) {
-        return bookingService.addBooking(bookingDtoShort, userId);
+    public ResponseEntity<BookingDto> addBooking(@RequestHeader("X-Sharer-User-Id") Integer userId,
+                                                @Validated @RequestBody BookingDtoShort bookingDtoShort) {
+        return new ResponseEntity<>(bookingService.addBooking(bookingDtoShort, userId), HttpStatus.OK);
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingDto approveBooking(@PathVariable Integer bookingId,
-                                     @NotEmpty @RequestHeader("X-Sharer-User-Id") Integer userId,
+    public ResponseEntity<BookingDto> approveBooking(@PathVariable Integer bookingId,
+                                     @RequestHeader("X-Sharer-User-Id") Integer userId,
                                      @NotEmpty @RequestParam Boolean approved) {
-        return bookingService.approveBooking(bookingId, userId, approved);
+        return new ResponseEntity<>(bookingService.approveBooking(bookingId, userId, approved), HttpStatus.OK);
     }
 
     @GetMapping("/{bookingId}")
-    public BookingDto getBookingById(@PathVariable Integer bookingId,
-                                     @NotEmpty @RequestHeader("X-Sharer-User-Id") Integer userId) {
-        return bookingService.getBookingById(bookingId, userId);
+    public ResponseEntity<BookingDto> getBookingById(@PathVariable Integer bookingId,
+                                     @RequestHeader("X-Sharer-User-Id") Integer userId) {
+        return new ResponseEntity<>(bookingService.getBookingById(bookingId, userId), HttpStatus.OK);
     }
 
     @GetMapping()
-    public List<BookingDto> getAllBookingsOfUser(@NotEmpty @RequestHeader("X-Sharer-User-Id") Integer userId,
+    public ResponseEntity<List<BookingDto>> getAllBookingsOfUser(@RequestHeader("X-Sharer-User-Id") Integer userId,
                                                  @RequestParam(defaultValue = "ALL", required = false) String state) {
-        return bookingService.getAllBookingsOfUser(userId, state);
+        return new ResponseEntity<>(bookingService.getAllBookingsOfUser(userId, state), HttpStatus.OK);
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> getAllItemsBookingsOfOwner(@NotEmpty @RequestHeader("X-Sharer-User-Id") Integer userId,
+    public ResponseEntity<List<BookingDto>> getAllItemsBookingsOfOwner(@RequestHeader("X-Sharer-User-Id") Integer userId,
                                                        @RequestParam(defaultValue = "ALL", required = false) String state) {
-        return bookingService.getAllItemsBookingsOfOwner(userId, state);
+        return new ResponseEntity<>(bookingService.getAllItemsBookingsOfOwner(userId, state), HttpStatus.OK);
     }
 }

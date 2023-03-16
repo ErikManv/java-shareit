@@ -7,6 +7,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -20,9 +21,12 @@ public class BookingDto {
     @Future(message = "end должен быть позже start")
     private final LocalDateTime end;
 
+    @NotNull
     private final UserDto booker;
 
+    @NotNull
     private final ItemDto item;
 
+    @NotNull
     private final Status status;
 }
