@@ -13,7 +13,7 @@ public class BookingDtoShort {
     private Integer itemId;
 
     @NotNull
-    @FutureOrPresent(message = "start не может быть раньше текущего времени ")
+    @FutureOrPresent
     private final LocalDateTime start;
 
     @NotNull

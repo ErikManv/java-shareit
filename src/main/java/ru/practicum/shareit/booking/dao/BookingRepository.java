@@ -14,7 +14,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     @Transactional
     @Modifying
-    @Query("update Booking b set b.status = ?1  where b.id = ?2")
+    @Query("update Booking booking set booking.status = ?1  where booking.id = ?2")
     void update(Status status, Integer bookingId);
 
     List<Booking> findAllByBooker_IdOrderByStartDesc(Integer bookerId);
