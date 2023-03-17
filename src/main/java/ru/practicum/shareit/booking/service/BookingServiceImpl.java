@@ -37,15 +37,15 @@ class BookingServiceImpl implements BookingService  {
 
     @Override
     public BookingDto addBooking(BookingDtoShort bookingDtoShort, Integer userId) {
-//        if (bookingDtoShort.getEnd().isBefore(bookingDtoShort.getStart()) ||
-//                bookingDtoShort.getEnd().isEqual(bookingDtoShort.getStart())) {
-//            throw new TimelineException("end не может быть раньше start");
-//        }
+        if (bookingDtoShort.getEnd().isBefore(bookingDtoShort.getStart()) ||
+                bookingDtoShort.getEnd().isEqual(bookingDtoShort.getStart())) {
+            throw new TimelineException("end не может быть раньше start");
+        }
         User booker = userService.getUser(userId);
         Item item = itemService.getItem(bookingDtoShort.getItemId());
-//        if (booker.getId().equals(item.getOwner().getId())) {
-//            throw new BookingErrorException("Owner не может забронировать собственный item");
-//        }
+        if (booker.getId().equals(item.getOwner().getId())) {
+            throw new BookingErrorException("Owner не может забронировать собственный item");
+        }
         Booking booking = Booking.builder()
             .start(bookingDtoShort.getStart())
             .end(bookingDtoShort.getEnd())
@@ -53,12 +53,11 @@ class BookingServiceImpl implements BookingService  {
             .booker(booker)
             .status(Status.WAITING)
             .build();
-//        if (item.getAvailable()) {
-//            return bookingMapper.toBookingDto(bookingRepository.save(booking));
-//        } else {
-//            throw new ItemUnvailableException("item недоступен");
-//        }
-        return bookingMapper.toBookingDto(bookingRepository.save(booking));
+        if (item.getAvailable()) {
+            return bookingMapper.toBookingDto(bookingRepository.save(booking));
+        } else {
+            throw new ItemUnvailableException("item недоступен");
+        }
     }
 
     @Override
