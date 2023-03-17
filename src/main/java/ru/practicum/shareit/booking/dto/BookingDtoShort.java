@@ -13,7 +13,7 @@ public class BookingDtoShort {
     private Integer itemId;
 
     @NotNull
-    @FutureOrPresent
+    @Future
     private final LocalDateTime start;
 
     @NotNull
