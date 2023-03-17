@@ -103,17 +103,17 @@ class BookingServiceImpl implements BookingService  {
     @Override
     public Booking getBooking(Integer bookingId) {
         return bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new BookingNotFoundException("cf"));
+                .orElseThrow(() -> new BookingNotFoundException("бронирование не найдено"));
     }
 
     private Booking newBooking(BookingDtoShort bookingDtoShort, User booker, Item item) {
-        Booking booking = new Booking();
-        booking.setBooker(booker);
-        booking.setItem(item);
-        booking.setEnd(bookingDtoShort.getEnd());
-        booking.setStart(bookingDtoShort.getStart());
-        booking.setStatus(Status.WAITING);
-        return booking;
+        return Booking.builder()
+            .start(bookingDtoShort.getStart())
+            .end(bookingDtoShort.getEnd())
+            .item(item)
+            .booker(booker)
+            .status(Status.WAITING)
+            .build();
     }
 
     private List<BookingDto> mapListToDto(List<Booking> bookingList) {
