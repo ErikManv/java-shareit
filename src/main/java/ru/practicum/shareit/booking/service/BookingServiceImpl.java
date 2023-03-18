@@ -3,11 +3,11 @@ package ru.practicum.shareit.booking.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.dto.BookingDtoInput;
 import ru.practicum.shareit.booking.dto.BookingDtoMapper;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.dao.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingDtoShort;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.dao.ItemRepository;
@@ -36,19 +36,19 @@ class BookingServiceImpl implements BookingService  {
     private final BookingDtoMapper bookingMapper;
 
     @Override
-    public BookingDto addBooking(BookingDtoShort bookingDtoShort, Integer userId) {
-        if (bookingDtoShort.getEnd().isBefore(bookingDtoShort.getStart()) ||
-                bookingDtoShort.getEnd().isEqual(bookingDtoShort.getStart())) {
+    public BookingDto addBooking(BookingDtoInput bookingDtoInput, Integer userId) {
+        if (bookingDtoInput.getEnd().isBefore(bookingDtoInput.getStart()) ||
+                bookingDtoInput.getEnd().isEqual(bookingDtoInput.getStart())) {
             throw new TimelineException("end не может быть раньше start");
         }
         User booker = userService.getUser(userId);
-        Item item = itemService.getItem(bookingDtoShort.getItemId());
+        Item item = itemService.getItem(bookingDtoInput.getItemId());
         if (booker.getId().equals(item.getOwner().getId())) {
             throw new BookingErrorException("Owner не может забронировать собственный item");
         }
         Booking booking = Booking.builder()
-            .start(bookingDtoShort.getStart())
-            .end(bookingDtoShort.getEnd())
+            .start(bookingDtoInput.getStart())
+            .end(bookingDtoInput.getEnd())
             .item(item)
             .booker(booker)
             .status(Status.WAITING)
