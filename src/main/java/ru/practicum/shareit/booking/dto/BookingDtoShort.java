@@ -6,9 +6,8 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
+@Builder
 public class BookingDtoShort {
     @NotNull
     private Integer itemId;
