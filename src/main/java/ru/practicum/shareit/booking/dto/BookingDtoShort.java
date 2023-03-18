@@ -6,9 +6,16 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Data
-@Builder
+@Setter
+@Getter
 public class BookingDtoShort {
+
+    public BookingDtoShort(Integer id, LocalDateTime start, LocalDateTime end) {
+        this.end = end;
+        this.start = start;
+        this.itemId = id;
+    }
+
     @NotNull
     private Integer itemId;
 
