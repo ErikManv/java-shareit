@@ -13,8 +13,8 @@ import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,13 +25,13 @@ import java.util.stream.Collectors;
 @Primary
 class BookingServiceImpl implements BookingService  {
 
-    private final UserService userService;
-
     private final ItemService itemService;
 
     private final BookingRepository bookingRepository;
 
     private final ItemRepository itemRepository;
+
+    private final UserRepository userRepository;
 
     private final BookingDtoMapper bookingMapper;
 
@@ -41,8 +41,8 @@ class BookingServiceImpl implements BookingService  {
                 bookingDtoInput.getEnd().isEqual(bookingDtoInput.getStart())) {
             throw new TimelineException("end не может быть раньше start");
         }
-        User booker = userService.getUser(userId);
-        Item item = itemService.getItem(bookingDtoInput.getItemId());
+        User booker = getUser(userId);
+        Item item = getItem(bookingDtoInput.getItemId());
         if (booker.getId().equals(item.getOwner().getId())) {
             throw new BookingErrorException("Owner не может забронировать собственный item");
         }
@@ -90,15 +90,15 @@ class BookingServiceImpl implements BookingService  {
 
     @Override
     public List<BookingDto> getAllBookingsOfUser(Integer userId, String state) {
-        userService.getUser(userId);
+        getUser(userId);
         List<Booking> allUserBookings = bookingRepository.findAllByBooker_IdOrderByStartDesc(userId);
         return getBookingsList(allUserBookings, state);
     }
 
     @Override
     public List<BookingDto> getAllItemsBookingsOfOwner(Integer userId, String state) {
-        userService.getUser(userId);
-        List<Item> userItems = itemRepository.findByOwner(userService.getUser(userId));
+        getUser(userId);
+        List<Item> userItems = itemRepository.findByOwner(getUser(userId));
         if (itemService.personalItems(userId).isEmpty()) {
             throw new ItemNotFoundException("ytn");
         }
@@ -106,10 +106,20 @@ class BookingServiceImpl implements BookingService  {
         return getBookingsList(allBookings, state);
     }
 
-    @Override
-    public Booking getBooking(Integer bookingId) {
+
+    private Booking getBooking(Integer bookingId) {
         return bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new BookingNotFoundException("бронирование не найдено"));
+    }
+
+    private User getUser(Integer itemId) {
+        return userRepository.findById(itemId)
+            .orElseThrow(() -> new ItemNotFoundException("User id=%s не найден"));
+    }
+
+    private Item getItem(Integer itemId) {
+        return itemRepository.findById(itemId)
+            .orElseThrow(() -> new ItemNotFoundException("Item id=%s не найден"));
     }
 
     private List<BookingDto> mapListToDto(List<Booking> bookingList) {

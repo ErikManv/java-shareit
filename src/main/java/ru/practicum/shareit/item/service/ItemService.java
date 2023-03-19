@@ -14,8 +14,6 @@ public interface ItemService {
 
     ItemDto getItemById(Integer itemId, Integer userId);
 
-    Item getItem(Integer itemId);
-
     List<ItemDto> personalItems(Integer userId);
 
     List<ItemDto> search(String text);

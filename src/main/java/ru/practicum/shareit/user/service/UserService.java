@@ -13,8 +13,6 @@ public interface UserService {
 
      UserDto getUserById(Integer userId);
 
-     User getUser(Integer userId);
-
      UserDto updateUser(UserDto user, Integer userId);
 
      void delete(Integer userId);

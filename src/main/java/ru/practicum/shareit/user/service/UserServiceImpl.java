@@ -51,12 +51,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(Integer userId) {
-        return repository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("cf"));
-    }
-
-    @Override
     @Transactional
     public UserDto updateUser(UserDto userDto, Integer userId) {
             User user = getUser(userId);
@@ -74,5 +68,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(Integer userId) {
         repository.deleteById(userId);
+    }
+
+    private User getUser(Integer userId) {
+        return repository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException("cf"));
     }
 }

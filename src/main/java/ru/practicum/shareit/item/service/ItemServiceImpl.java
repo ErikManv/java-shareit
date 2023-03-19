@@ -19,7 +19,8 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserController;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.dao.UserRepository;
+import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
 
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     private final BookingRepository bookingRepository;
 
@@ -53,7 +54,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto addItem(ItemDto itemDto, Integer userId) {
         Item item = itemMapper.toItem(itemDto);
-        item.setOwner(userService.getUser(userId));
+        item.setOwner(getUser(userId));
         log.info("предмет {} добавлен", itemDto.getName());
         return itemMapper.toItemDto(itemRepository.save(item));
     }
@@ -85,7 +86,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> personalItems(Integer userId) {
         List<ItemDto> itemList = new ArrayList<>();
-        for (Item i: itemRepository.findByOwner(userService.getUser(userId))) {
+        for (Item i: itemRepository.findByOwner(getUser(userId))) {
             itemList.add(setCommentToItem(setBookingToItem(itemMapper.toItemDto(i))));
         }
         log.info("список для пользователя {} получен", userId);
@@ -100,12 +101,6 @@ public class ItemServiceImpl implements ItemService {
                 .filter(Item::getAvailable)
                 .map(itemMapper::toItemDto)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public Item getItem(Integer itemId) {
-        return itemRepository.findById(itemId)
-                .orElseThrow(() -> new ItemNotFoundException("User id=%s не найден"));
     }
 
     @Override
@@ -130,7 +125,7 @@ public class ItemServiceImpl implements ItemService {
                 .anyMatch(x -> !x.getStatus().equals(REJECTED) && x.getEnd().isBefore(now))) {
             comment.setText(commentDto.getText());
             comment.setItem(getItem(itemId));
-            comment.setAuthor(userService.getUser(userId));
+            comment.setAuthor(getUser(userId));
             comment.setCreated(now);
             commentRepository.save(comment);
         } else {
@@ -167,5 +162,15 @@ public class ItemServiceImpl implements ItemService {
         return commentRepository.findAllByItem_Id(itemDto.getId()).stream()
                 .map(commentMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    private Item getItem(Integer itemId) {
+        return itemRepository.findById(itemId)
+            .orElseThrow(() -> new ItemNotFoundException("Item id=%s не найден"));
+    }
+
+    private User getUser(Integer itemId) {
+        return userRepository.findById(itemId)
+            .orElseThrow(() -> new ItemNotFoundException("User id=%s не найден"));
     }
 }
