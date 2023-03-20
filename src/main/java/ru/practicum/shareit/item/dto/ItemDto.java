@@ -1,11 +1,13 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.Data;
+import ru.practicum.shareit.booking.dto.BookingLinkDto;
 import ru.practicum.shareit.markers.Create;
 import ru.practicum.shareit.markers.Update;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 public class ItemDto {
@@ -21,4 +23,9 @@ public class ItemDto {
     @NotNull(groups = {Create.class})
     private Boolean available;
 
+    private List<CommentDto> comments;
+
+    private BookingLinkDto lastBooking;
+
+    private BookingLinkDto nextBooking;
 }

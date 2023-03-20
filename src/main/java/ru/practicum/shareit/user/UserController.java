@@ -36,7 +36,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable("id") Integer userId) {
-        return new ResponseEntity<>(userServiceImpl.getUser(userId), HttpStatus.OK);
+        return new ResponseEntity<>(userServiceImpl.getUserById(userId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

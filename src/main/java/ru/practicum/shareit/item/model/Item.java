@@ -4,13 +4,31 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.*;
+
+
+@Entity
+@Table(name = "items")
 @Getter
 @Setter
 public class Item {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
     private User owner;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "is_available")
     private Boolean available;
-    private Integer requestId;
+
+    @Column(name = "request_id")
+    private Integer request;
 }
