@@ -41,8 +41,7 @@ class ItemRequestServiceTest {
     List<Item> items;
 
     @BeforeEach
-        void init()
-    {
+        void init() {
         testOwner = User.builder()
             .email("email@email.ru")
             .name("test Owner")
@@ -62,6 +61,7 @@ class ItemRequestServiceTest {
             .build();
         items = new ArrayList<>();
     }
+
     @Mock
     private ItemRequestRepository itemRequestRepository;
     @Mock

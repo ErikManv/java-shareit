@@ -21,7 +21,6 @@ import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
@@ -38,7 +37,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class BookingServiceImplTest {
+class BookingServiceTest {
     User testOwner = User.builder()
         .email("email@email.ru")
         .name("test Owner")
@@ -91,8 +90,6 @@ class BookingServiceImplTest {
     private ItemRepository itemRepository;
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private ItemService itemService;
     @Captor
     private ArgumentCaptor<Booking> argumentCaptor;
     @InjectMocks

@@ -7,7 +7,6 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -45,23 +44,6 @@ class UserServiceTest {
 
         assertThrows(UserNotFoundException.class, () -> userService.updateUser(testUserDto, userId));
     }
-
-//    @Test
-//    void updateUser_whenDuplicateEmail_thenEmailDuplicateExceptionThrown() {
-//        Integer userId = 2;
-//        User testUser = User.builder()
-//            .id(1)
-//            .email("email@email.ru")
-//            .name("test User")
-//            .build();
-//        UserDto testUserDto = UserDto.builder()
-//            .email("email@email.ru1")
-//            .name("test User")
-//            .build();
-//        when(userRepository.findById(any())).thenReturn(Optional.of(testUser));
-//
-//        assertThrows(MethodArgumentNotValidException.class, () -> userService.updateUser(testUserDto, userId));
-//    }
 
     @Test
     void updateUserCorrect() {
