@@ -84,7 +84,7 @@ class BookingControllerTest {
 
     @SneakyThrows
     @Test
-    void addBooking_whenBookingIsCorrect_thenStatusIsOk() {
+    void addBookingBookingIsCorrect() {
         Integer userId = 1;
         BookingDtoInput bookingDtoInput = BookingDtoInput.builder()
             .itemId(1)
