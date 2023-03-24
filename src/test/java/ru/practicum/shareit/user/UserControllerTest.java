@@ -30,22 +30,22 @@ class UserControllerTest {
     @SneakyThrows
     @Test
     void addUserValidStatusIsOk() {
-        UserDto userDtoToAdd = UserDto.builder()
+        UserDto userDto = UserDto.builder()
             .name("test")
             .email("test@test.ru")
             .build();
-        when(userService.createUser(userDtoToAdd)).thenReturn(userDtoToAdd);
+        when(userService.createUser(userDto)).thenReturn(userDto);
 
         String result = mockMvc.perform(post("/users")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(userDtoToAdd)))
+                .content(objectMapper.writeValueAsString(userDto)))
             .andExpect(status().isOk())
             .andDo(print())
             .andReturn()
             .getResponse()
             .getContentAsString();
 
-        assertEquals(objectMapper.writeValueAsString(userDtoToAdd), result);
+        assertEquals(objectMapper.writeValueAsString(userDto), result);
     }
 
     @SneakyThrows

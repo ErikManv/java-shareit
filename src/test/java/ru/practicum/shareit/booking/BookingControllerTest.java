@@ -86,7 +86,7 @@ class BookingControllerTest {
     @Test
     void addBooking_whenBookingIsCorrect_thenStatusIsOk() {
         Integer userId = 1;
-        BookingDtoInput bookingDtoIn = BookingDtoInput.builder()
+        BookingDtoInput bookingDtoInput = BookingDtoInput.builder()
             .itemId(1)
             .start(LocalDateTime.now().plusDays(1))
             .end(LocalDateTime.now().plusDays(2))
@@ -95,18 +95,18 @@ class BookingControllerTest {
         mockMvc.perform(post("/bookings")
                 .header("X-Sharer-User-Id", userId)
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(bookingDtoIn)))
+                .content(objectMapper.writeValueAsString(bookingDtoInput)))
             .andExpect(status().isOk())
             .andDo(print());
 
-        verify(bookingService).addBooking(bookingDtoIn, userId);
+        verify(bookingService).addBooking(bookingDtoInput, userId);
     }
 
     @SneakyThrows
     @Test
     void addBooking_whenBookingIsNotCorrect_thenStatusIsBadRequest() {
         Integer userId = 1;
-        BookingDtoInput bookingDtoIn = BookingDtoInput.builder()
+        BookingDtoInput bookingDtoInput = BookingDtoInput.builder()
             .itemId(1)
             .start(LocalDateTime.now())
             .end(LocalDateTime.now())
@@ -115,11 +115,11 @@ class BookingControllerTest {
         mockMvc.perform(post("/bookings")
                 .header("X-Sharer-User-Id", userId)
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(bookingDtoIn)))
+                .content(objectMapper.writeValueAsString(bookingDtoInput)))
             .andExpect(status().isBadRequest())
             .andDo(print());
 
-        verify(bookingService, never()).addBooking(bookingDtoIn, userId);
+        verify(bookingService, never()).addBooking(bookingDtoInput, userId);
     }
 
     @SneakyThrows
