@@ -27,9 +27,9 @@ class UserControllerTest {
 
     @SneakyThrows
     @Test
-    void addUser_whenValid_thenStatusIsOk() {
+    void addUserValidStatusIsOk() {
         UserDto userDtoToAdd = UserDto.builder()
-            .name("Test")
+            .name("test")
             .email("test@test.ru")
             .build();
         when(userService.createUser(userDtoToAdd)).thenReturn(userDtoToAdd);
@@ -48,7 +48,7 @@ class UserControllerTest {
 
     @SneakyThrows
     @Test
-    void addUser_whenUserIsNotValid_thenStatusIsBadRequest() {
+    void addUserUserIsNotValidBadRequest() {
         UserDto userDtoToAdd = UserDto.builder().build();
         when(userService.createUser(userDtoToAdd)).thenReturn(userDtoToAdd);
 
@@ -66,7 +66,7 @@ class UserControllerTest {
     void updateUser() {
         Integer userId = 1;
         UserDto userDto = UserDto.builder()
-            .name("Test")
+            .name("test")
             .email("test@test.ru")
             .build();
         when(userService.updateUser(userDto, userId)).thenReturn(userDto);

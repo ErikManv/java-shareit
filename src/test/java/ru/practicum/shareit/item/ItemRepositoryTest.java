@@ -31,26 +31,26 @@ class ItemRepositoryTest {
 
     User owner = User.builder()
         .id(1)
-        .name("Item owner")
-        .email("item_owner@test.ru")
+        .name("itemOwner")
+        .email("itemOwner@test.ru")
         .build();
 
     User requester = User.builder()
         .id(2)
-        .name("Item requestor")
-        .email("item_requestor@test.ru")
+        .name("ItemRequester")
+        .email("itemRequester@test.ru")
         .build();
 
     ItemRequest itemRequest = ItemRequest.builder()
         .id(1)
         .owner(requester)
-        .description("item request")
+        .description("itemRequest")
         .created(LocalDateTime.now())
         .build();
     Item item = Item.builder()
         .id(1)
         .owner(owner)
-        .description("test item")
+        .description("testItem")
         .available(true)
         .name("item")
         .build();
@@ -58,7 +58,7 @@ class ItemRepositoryTest {
     Item item1 = Item.builder()
         .id(2)
         .owner(owner)
-        .description("test item1")
+        .description("testItem1")
         .available(true)
         .name("item1")
         .request(itemRequest)
@@ -78,9 +78,9 @@ class ItemRepositoryTest {
         Item itemUp = Item.builder()
             .id(2)
             .owner(requester)
-            .description("updated description")
+            .description("updatedDescription")
             .available(false)
-            .name("updated name")
+            .name("updatedName")
             .build();
         itemRepository.save(itemUp);
         Item updatedItem = itemRepository.findById(2).get();

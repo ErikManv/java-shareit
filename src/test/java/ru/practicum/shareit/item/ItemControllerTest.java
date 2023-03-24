@@ -54,7 +54,7 @@ class ItemControllerTest {
 
     @SneakyThrows
     @Test
-    void addItem_whenItemIsNotValid_thenStatusIsBadRequest() {
+    void addItemItemIsNotValidBadRequest() {
         Integer userId = 1;
         ItemDto itemDto = ItemDto.builder()
             .name("")
@@ -164,7 +164,7 @@ class ItemControllerTest {
 
     @SneakyThrows
     @Test
-    void addComment_whenCommentIsNotValid_thenStatusIsBadRequest() {
+    void addCommentCommentIsNotValidBadRequest() {
         Integer itemId = 1;
         Integer userId = 1;
         CommentDto commentDto = CommentDto.builder()

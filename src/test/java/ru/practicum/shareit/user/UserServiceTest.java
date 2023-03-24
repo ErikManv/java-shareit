@@ -34,11 +34,11 @@ class UserServiceTest {
     UserServiceImpl userService;
 
     @Test
-    void updateUser_UserNotFound() {
+    void updateUserUserNotFound() {
         Integer userId = 2;
         UserDto testUserDto = UserDto.builder()
             .email("email@email.ru")
-            .name("test User")
+            .name("testUser")
             .build();
         when(userRepository.findById(any())).thenReturn(Optional.empty());
 
@@ -51,11 +51,11 @@ class UserServiceTest {
         User testUser = User.builder()
             .id(1)
             .email("email@email.ru")
-            .name("test User")
+            .name("testUser")
             .build();
         UserDto testUserDto = UserDto.builder()
             .email("email@email.ru")
-            .name("test User1")
+            .name("testUser1")
             .build();
         when(userRepository.findById(any())).thenReturn(Optional.of(testUser));
 

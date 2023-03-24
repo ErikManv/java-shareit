@@ -39,7 +39,7 @@ class UserRepositoryTest {
     @Test
     void update() {
         User userUp = User.builder()
-            .name("Update")
+            .name("update")
             .email("update@test.ru")
             .id(1)
             .build();

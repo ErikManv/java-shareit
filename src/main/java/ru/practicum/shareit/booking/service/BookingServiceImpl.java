@@ -97,7 +97,6 @@ public class BookingServiceImpl implements BookingService  {
             offset = ((offset + 1) / limit);
         }
         Page<Booking> allUserBookings = bookingRepository.findAllByBooker_IdOrderByStartDesc(userId, PageRequest.of(offset, limit, Sort.by("id").ascending()));
-        System.out.println(allUserBookings.getTotalElements());
         return getBookingsList(allUserBookings, state);
     }
 
@@ -115,7 +114,6 @@ public class BookingServiceImpl implements BookingService  {
         }
 
         Page<Booking> allBookings = bookingRepository.findAllByBooker_IdNotAndItemInOrderByStartDesc(userId, userItems, PageRequest.of(offset, limit, Sort.by("id").ascending()));
-        System.out.println(allBookings.getTotalElements());
         return getBookingsList(allBookings, state);
     }
 

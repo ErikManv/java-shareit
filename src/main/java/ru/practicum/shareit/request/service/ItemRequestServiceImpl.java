@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.ItemNotFoundException;
+import ru.practicum.shareit.exception.ItemRequestNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemShortMapper;
@@ -85,6 +85,6 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     private ItemRequest getItemRequest(Integer itemRequestId) {
         return itemRequestRepository.findById(itemRequestId)
-            .orElseThrow(() -> new ItemNotFoundException("ItemRequest не найден"));
+            .orElseThrow(() -> new ItemRequestNotFoundException("ItemRequest не найден"));
     }
 }

@@ -54,7 +54,7 @@ class ItemRequestControllerTest {
 
     @SneakyThrows
     @Test
-    void addItemRequest_whenItemRequestIsNotValid_thenStatusIsBadRequest() {
+    void addItemRequestItemRequestIsNotValidBadRequest() {
         Integer userId = 1;
         ItemRequestDto itemRequestDto = ItemRequestDto.builder()
             .requesterId(1)
