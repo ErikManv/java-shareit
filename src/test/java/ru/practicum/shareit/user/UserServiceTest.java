@@ -19,8 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -32,6 +31,56 @@ class UserServiceTest {
     private ArgumentCaptor<User> userArgumentCaptor;
     @InjectMocks
     UserServiceImpl userService;
+
+    User userTest2 = User.builder()
+        .email("email@email.ru")
+        .name("testUser")
+        .id(1)
+        .build();
+
+    @Test
+    void createUserCorrectTest() {
+        UserDto userTest = UserDto.builder()
+            .email("email@email.ru")
+            .name("testUser")
+            .id(2)
+            .build();
+
+        when(userMapper.toUser(userTest)).thenReturn(userTest2);
+
+        userService.createUser(userTest);
+
+        verify(userRepository).save(userArgumentCaptor.capture());
+        User savedUser = userArgumentCaptor.getValue();
+
+        assertEquals(userTest.getName(), savedUser.getName());
+        assertEquals(userTest.getEmail(), savedUser.getEmail());
+    }
+
+    @Test
+    void getUserByIdUserNotFoundThrowUserUserNotFoundException() {
+        Integer userId = 0;
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class,
+            () -> userService.getUserById(userId));
+    }
+
+    @Test
+    void getUserByIdUserFoundTest() {
+        Integer userId = 0;
+
+        UserDto userDtoTest = UserDto.builder()
+            .email("email@email.ru")
+            .name("testUser")
+            .id(1)
+            .build();
+
+        when(userRepository.findById(any())).thenReturn(Optional.of(userTest2));
+        when(userMapper.toUserDto(any())).thenReturn(userDtoTest);
+
+        assertEquals(userTest2.getId(), userService.getUserById(userId).getId());
+    }
 
     @Test
     void updateUserUserNotFound() {
@@ -65,5 +114,14 @@ class UserServiceTest {
         User updatedUser = userArgumentCaptor.getValue();
 
         assertEquals(testUserDto.getName(), updatedUser.getName());
+    }
+
+    @Test
+    void deleteUserTest() {
+        Integer userId = 0;
+
+        userService.delete(userId);
+
+        verify(userRepository, times(1)).deleteById(userId);
     }
 }
