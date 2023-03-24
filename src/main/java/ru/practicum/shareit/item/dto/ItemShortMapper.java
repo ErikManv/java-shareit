@@ -5,9 +5,8 @@ import org.mapstruct.Mapping;
 import ru.practicum.shareit.item.model.Item;
 
 @Mapper(componentModel = "spring")
-public interface ItemMapper {
+public interface ItemShortMapper {
+    @Mapping(target = "ownerId", source = "owner.id")
     @Mapping(target = "requestId", source = "request.id")
-    ItemDto toItemDto(Item model);
-
-    Item toItem(ItemDto dto);
+    ItemShortDto toDto(Item model);
 }

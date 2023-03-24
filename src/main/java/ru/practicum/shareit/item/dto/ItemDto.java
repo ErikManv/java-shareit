@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.booking.dto.BookingLinkDto;
 import ru.practicum.shareit.markers.Create;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
+@Builder
 public class ItemDto {
 
     @NotNull(groups = {Update.class})
@@ -28,4 +30,6 @@ public class ItemDto {
     private BookingLinkDto lastBooking;
 
     private BookingLinkDto nextBooking;
+
+    private Integer requestId;
 }

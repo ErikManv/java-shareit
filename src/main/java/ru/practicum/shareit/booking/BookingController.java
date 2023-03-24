@@ -9,6 +9,8 @@ import ru.practicum.shareit.booking.dto.BookingDtoInput;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
@@ -42,13 +44,21 @@ public class BookingController {
 
     @GetMapping()
     public ResponseEntity<List<BookingDto>> getAllBookingsByUser(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                                 @RequestParam(defaultValue = "ALL", required = false) String state) {
-        return new ResponseEntity<>(bookingService.getAllBookingsOfUser(userId, state), HttpStatus.OK);
+                                                 @RequestParam(defaultValue = "ALL", required = false) String state,
+                                                                 @RequestParam(value = "from", defaultValue = "0", required = false)
+                                                                     @Min(0) Integer offset,
+                                                                 @RequestParam(value = "size", defaultValue = "10", required = false)
+                                                                     @Min(1) @Max(50) Integer limit) {
+        return new ResponseEntity<>(bookingService.getAllBookingsOfUser(userId, state, offset, limit), HttpStatus.OK);
     }
 
     @GetMapping("/owner")
     public ResponseEntity<List<BookingDto>> getAllItemsBookingsByOwner(@RequestHeader("X-Sharer-User-Id") Integer userId,
-                                                       @RequestParam(defaultValue = "ALL", required = false) String state) {
-        return new ResponseEntity<>(bookingService.getAllItemsBookingsOfOwner(userId, state), HttpStatus.OK);
+                                                       @RequestParam(defaultValue = "ALL", required = false) String state,
+                                                                       @RequestParam(value = "from", defaultValue = "0",
+                                                                           required = false) @Min(0) Integer offset,
+                                                                       @RequestParam(value = "size", defaultValue = "10",
+                                                                           required = false) @Min(1) @Max(50) Integer limit) {
+        return new ResponseEntity<>(bookingService.getAllItemsBookingsOfOwner(userId, state, offset, limit), HttpStatus.OK);
     }
 }
