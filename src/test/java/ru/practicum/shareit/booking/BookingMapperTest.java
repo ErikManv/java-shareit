@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class BookingMapperTest {
 
     @Autowired
-    BookingDtoMapperImpl bookingMapper;
+    BookingDtoMapperImpl bookingDtoMapper;
     LocalDateTime start = LocalDateTime.of(2023, 11, 1, 12, 1);
     LocalDateTime end = LocalDateTime.of(2023, 12, 1, 12, 1);
     LocalDateTime dateTime = LocalDateTime.of(2024, 12, 1, 12, 1);
@@ -93,7 +93,7 @@ class BookingMapperTest {
 
     @Test
     void toDtoBookingNotNullTest() {
-        BookingDto actualBookingDto = bookingMapper.toBookingDto(testBooking);
+        BookingDto actualBookingDto = bookingDtoMapper.toBookingDto(testBooking);
         assertEquals(testBookingDto.getId(), actualBookingDto.getId());
         assertEquals(testBookingDto.getItem(), actualBookingDto.getItem());
         assertEquals(testBookingDto.getBooker(), actualBookingDto.getBooker());
@@ -104,13 +104,13 @@ class BookingMapperTest {
 
     @Test
     void toDtoBookingNullTest() {
-        BookingDto actualBookingDto = bookingMapper.toBookingDto(null);
+        BookingDto actualBookingDto = bookingDtoMapper.toBookingDto(null);
         assertNull(actualBookingDto);
     }
 
     @Test
     void toBookingBookingDtoNotNullTest() {
-        Booking actualBooking = bookingMapper.toBooking(testBookingDto);
+        Booking actualBooking = bookingDtoMapper.toBooking(testBookingDto);
         assertEquals(testBooking.getId(), actualBooking.getId());
         assertEquals(testBooking.getItem().getId(), actualBooking.getItem().getId());
         assertEquals(testBooking.getBooker().getId(), actualBooking.getBooker().getId());
@@ -121,7 +121,7 @@ class BookingMapperTest {
 
     @Test
     void toBookingBookingDtoNullTest() {
-        Booking actualBooking = bookingMapper.toBooking(null);
+        Booking actualBooking = bookingDtoMapper.toBooking(null);
         assertNull(actualBooking);
     }
 }

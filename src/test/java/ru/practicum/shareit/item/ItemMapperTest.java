@@ -28,7 +28,7 @@ class ItemMapperTest {
         .email("test@email.ru")
         .build();
 
-    User testRequestor = User.builder()
+    User testRequester = User.builder()
         .id(2)
         .name("test1")
         .email("test1@email.ru")
@@ -37,7 +37,7 @@ class ItemMapperTest {
     ItemRequest testItemRequest = ItemRequest.builder()
         .id(1)
         .description("test request")
-        .owner(testRequestor)
+        .owner(testRequester)
         .created(dateTime)
         .build();
 

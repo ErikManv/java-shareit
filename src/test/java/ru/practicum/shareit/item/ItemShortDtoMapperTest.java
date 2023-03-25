@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @SpringBootTest
 class ItemShortDtoMapperTest {
     @Autowired
-    ItemShortMapperImpl itemMapper;
+    ItemShortMapperImpl itemShortMapper;
 
     LocalDateTime dateTime = LocalDateTime.of(2023, 12, 1, 12, 1);
 
@@ -59,7 +59,7 @@ class ItemShortDtoMapperTest {
 
     @Test
     void toDTO_whenItemNotNull_thenReturnItemShortDto() {
-        ItemShortDto actualItemShortDto = itemMapper.toDto(testItem);
+        ItemShortDto actualItemShortDto = itemShortMapper.toDto(testItem);
         assertEquals(testItemShortDto.getId(), actualItemShortDto.getId());
         assertEquals(testItemShortDto.getName(), actualItemShortDto.getName());
         assertEquals(testItemShortDto.getOwnerId(), actualItemShortDto.getOwnerId());
@@ -70,7 +70,7 @@ class ItemShortDtoMapperTest {
 
     @Test
     void toDTO_whenItemNull_thenReturnNull() {
-        ItemShortDto actualItemShortDto = itemMapper.toDto(null);
+        ItemShortDto actualItemShortDto = itemShortMapper.toDto(null);
         assertNull(actualItemShortDto);
     }
 }

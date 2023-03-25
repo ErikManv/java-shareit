@@ -1,15 +1,17 @@
 package ru.practicum.shareit.request.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import ru.practicum.shareit.item.dto.ItemShortDto;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
 @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ItemRequestDto {
 
     private Integer id;

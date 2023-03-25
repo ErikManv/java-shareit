@@ -81,7 +81,7 @@ class BookingServiceTest {
     @Mock
     private BookingRepository bookingRepository;
     @Mock
-    private BookingDtoMapper bookingMapper;
+    private BookingDtoMapper bookingDtoMapper;
     @Mock
     private ItemRepository itemRepository;
     @Mock
@@ -97,7 +97,7 @@ class BookingServiceTest {
         Integer userId = 2;
 
         when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(expectedBooking));
-        when(bookingMapper.toBookingDto(any())).thenReturn(expectedBookingDto);
+        when(bookingDtoMapper.toBookingDto(any())).thenReturn(expectedBookingDto);
 
         BookingDto actualBooking = bookingService.getBookingById(bookingId, userId);
 
@@ -407,7 +407,7 @@ class BookingServiceTest {
         when(userRepository.findById(any())).thenReturn(Optional.of(testOwner));
         when(itemRepository.findById(any())).thenReturn(Optional.of(testItem2));
         when(bookingRepository.save(any())).thenReturn(expectedBooking);
-        when(bookingMapper.toBookingDto(any())).thenReturn(expectedBookingDto);
+        when(bookingDtoMapper.toBookingDto(any())).thenReturn(expectedBookingDto);
 
         assertEquals(expectedBookingDto, bookingService.addBooking(bookingDtoIn, userId));
     }
@@ -452,7 +452,7 @@ class BookingServiceTest {
 
         bookingService.approveBooking(booking.getId(), userId, true);
 
-        verify(bookingMapper).toBookingDto(argumentCaptor.capture());
+        verify(bookingDtoMapper).toBookingDto(argumentCaptor.capture());
         Booking updatedBooking = argumentCaptor.getValue();
 
         assertEquals(expectedBooking.getStatus(), updatedBooking.getStatus());
@@ -482,7 +482,7 @@ class BookingServiceTest {
 
         bookingService.approveBooking(booking.getId(), userId, false);
 
-        verify(bookingMapper).toBookingDto(argumentCaptor.capture());
+        verify(bookingDtoMapper).toBookingDto(argumentCaptor.capture());
         Booking updatedBooking = argumentCaptor.getValue();
 
         assertEquals(expectedBooking.getStatus(), updatedBooking.getStatus());

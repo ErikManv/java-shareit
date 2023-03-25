@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @SpringBootTest
 class BookingLinkDtoMapperTest {
     @Autowired
-    BookingLinkDtoMapper bookingMapper;
+    BookingLinkDtoMapper bookingLinkDtoMapper;
 
     User testBooker = User.builder()
         .id(3)
@@ -34,14 +34,14 @@ class BookingLinkDtoMapperTest {
 
     @Test
     void toDTO_whenBookingNotNull_thenReturnBookingShortDto() {
-        BookingLinkDto actualBookingShortDto = bookingMapper.toDto(testBooking);
+        BookingLinkDto actualBookingShortDto = bookingLinkDtoMapper.toDto(testBooking);
         assertEquals(testBookingShortDto.getId(), actualBookingShortDto.getId());
         assertEquals(testBookingShortDto.getBookerId(), actualBookingShortDto.getBookerId());
     }
 
     @Test
     void toDTO_whenBookingNull_thenReturnNull() {
-        BookingLinkDto actualBookingShortDto = bookingMapper.toDto(null);
+        BookingLinkDto actualBookingShortDto = bookingLinkDtoMapper.toDto(null);
         assertNull(actualBookingShortDto);
     }
 }
