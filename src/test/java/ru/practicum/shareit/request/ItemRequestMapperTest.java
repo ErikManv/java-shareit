@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @SpringBootTest
 class ItemRequestMapperTest {
     @Autowired
-    ItemRequestMapperImpl itemRequestMapper;
+    private ItemRequestMapperImpl itemRequestMapper;
 
     LocalDateTime dateTime = LocalDateTime.of(2023, 12, 1, 12, 1);
 

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class UserMapperTest {
 
     @Autowired
-    UserMapperImpl userMapper;
+    private UserMapperImpl userMapper;
     User testUser = User.builder()
         .id(1)
         .name("test")

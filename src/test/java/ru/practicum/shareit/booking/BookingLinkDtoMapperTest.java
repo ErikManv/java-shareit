@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @SpringBootTest
 class BookingLinkDtoMapperTest {
     @Autowired
-    BookingLinkDtoMapper bookingLinkDtoMapper;
+    private BookingLinkDtoMapper bookingLinkDtoMapper;
 
     User testBooker = User.builder()
         .id(3)

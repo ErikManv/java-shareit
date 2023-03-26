@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 @Builder
 public class BookingDto {
 
-    private final Integer id;
+    private Integer id;
 
-    private final LocalDateTime start;
+    private LocalDateTime start;
 
-    private final LocalDateTime end;
+    private LocalDateTime end;
 
-    private final UserDto booker;
+    private UserDto booker;
 
-    private final ItemDto item;
+    private ItemDto item;
 
-    private final Status status;
+    private Status status;
 }
