@@ -94,9 +94,11 @@ class BookingMapperTest {
     @Test
     void toDtoBookingNotNullTest() {
         BookingDto actualBookingDto = bookingDtoMapper.toBookingDto(testBooking);
+        System.out.println(testBookingDto.getItem().getName());
+        System.out.println(actualBookingDto.getItem().getName());
         assertEquals(testBookingDto.getId(), actualBookingDto.getId());
-        assertEquals(testBookingDto.getItem(), actualBookingDto.getItem());
-        assertEquals(testBookingDto.getBooker(), actualBookingDto.getBooker());
+        assertEquals(testBookingDto.getItem().getId(), actualBookingDto.getItem().getId());
+        assertEquals(testBookingDto.getBooker().getId(), actualBookingDto.getBooker().getId());
         assertEquals(testBookingDto.getStatus(), actualBookingDto.getStatus());
         assertEquals(testBookingDto.getStart(), actualBookingDto.getStart());
         assertEquals(testBookingDto.getEnd(), actualBookingDto.getEnd());

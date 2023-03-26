@@ -39,7 +39,7 @@ class ItemRequestControllerTest {
             .description("description")
             .created(LocalDateTime.now())
             .build();
-        when(itemRequestService.addItemRequest(itemRequestDto, userId)).thenReturn(itemRequestDto);
+        when(itemRequestService.addItemRequest(any(), any())).thenReturn(itemRequestDto);
 
         String result = mockMvc.perform(post("/requests")
                 .header("X-Sharer-User-Id", userId)

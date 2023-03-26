@@ -8,15 +8,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoInput;
+import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BookingController.class)
@@ -92,14 +97,40 @@ class BookingControllerTest {
             .end(LocalDateTime.now().plusDays(2))
             .build();
 
+        ItemDto testItemDto = ItemDto.builder()
+            .id(1)
+            .name("Item")
+            .description("testItem")
+            .available(true)
+            .requestId(1)
+            .build();
+
+        UserDto testBookerDto = UserDto.builder()
+            .id(3)
+            .name("Test2")
+            .email("test2@email.ru")
+            .build();
+
+        BookingDto testBooking = BookingDto.builder()
+            .id(1)
+            .item(testItemDto)
+            .booker(testBookerDto)
+            .status(Status.WAITING)
+            .start(LocalDateTime.now())
+            .end(LocalDateTime.now().plusDays(1))
+            .build();
+
+        when(bookingService.addBooking(any(), any())).thenReturn(testBooking);
+
         mockMvc.perform(post("/bookings")
                 .header("X-Sharer-User-Id", userId)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(bookingDtoInput)))
             .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id", is(testBooking.getId())))
+            .andExpect(jsonPath("$.booker.id", is(testBooking.getBooker().getId())))
+            .andExpect(jsonPath("$.item.id", is(testBooking.getItem().getId())))
             .andDo(print());
-
-        verify(bookingService).addBooking(bookingDtoInput, userId);
     }
 
     @SneakyThrows

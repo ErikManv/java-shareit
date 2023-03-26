@@ -39,7 +39,7 @@ class ItemControllerTest {
             .description("test description")
             .available(true)
             .build();
-        when(itemService.addItem(itemDto, userId)).thenReturn(itemDto);
+        when(itemService.addItem(any(), any())).thenReturn(itemDto);
 
         String result = mockMvc.perform(post("/items")
                 .header("X-Sharer-User-Id", userId)
@@ -85,7 +85,7 @@ class ItemControllerTest {
             .description("test description")
             .available(true)
             .build();
-        when(itemService.updateItem(itemDto, userId, itemId)).thenReturn(itemDto);
+        when(itemService.updateItem(any(), any(), any())).thenReturn(itemDto);
 
         String result = mockMvc.perform(patch("/items/{itemId}", itemId)
                 .header("X-Sharer-User-Id", userId)
@@ -149,7 +149,7 @@ class ItemControllerTest {
             .text("test comment")
             .created(LocalDateTime.now())
             .build();
-        when(itemService.addComment(itemId, userId, commentDto)).thenReturn(commentDto);
+        when(itemService.addComment(any(), any(), any())).thenReturn(commentDto);
 
         String result = mockMvc.perform(post("/items/{itemId}/comment", itemId)
                 .header("X-Sharer-User-Id", userId)

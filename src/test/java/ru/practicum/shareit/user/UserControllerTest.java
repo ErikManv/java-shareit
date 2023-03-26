@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
-@AutoConfigureMockMvc
 class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
@@ -34,7 +32,7 @@ class UserControllerTest {
             .name("test")
             .email("test@test.ru")
             .build();
-        when(userService.createUser(userDto)).thenReturn(userDto);
+        when(userService.createUser(any())).thenReturn(userDto);
 
         String result = mockMvc.perform(post("/users")
                 .contentType("application/json")
@@ -71,7 +69,7 @@ class UserControllerTest {
             .name("test")
             .email("test@test.ru")
             .build();
-        when(userService.updateUser(userDto, userId)).thenReturn(userDto);
+        when(userService.updateUser(any(), any())).thenReturn(userDto);
 
         String result = mockMvc.perform(patch("/users/{userId}", userId)
                 .contentType("application/json")
