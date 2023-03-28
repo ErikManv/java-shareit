@@ -12,6 +12,8 @@ import ru.practicum.shareit.markers.Create;
 import ru.practicum.shareit.markers.Update;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
@@ -44,13 +46,21 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> allPersonalItems(@RequestHeader ("X-Sharer-User-Id") Integer userId) {
-        return new ResponseEntity<>(itemServiceImpl.personalItems(userId), HttpStatus.OK);
+    public ResponseEntity<List<ItemDto>> allPersonalItems(@RequestHeader ("X-Sharer-User-Id") Integer userId,
+                                                          @RequestParam(value = "from", defaultValue = "0", required = false)
+                                                          @Min(0) Integer offset,
+                                                          @RequestParam(value = "size", defaultValue = "10", required = false)
+                                                              @Min(1) @Max(50) Integer limit) {
+        return new ResponseEntity<>(itemServiceImpl.personalItems(userId, offset, limit), HttpStatus.OK);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ItemDto>> search(@RequestParam(defaultValue = "±") String text) {
-        return new ResponseEntity<>(itemServiceImpl.search(text),HttpStatus.OK);
+    public ResponseEntity<List<ItemDto>> search(@RequestParam(defaultValue = "±") String text,
+                                                @RequestParam(value = "from", defaultValue = "0", required = false)
+                                                @Min(0) Integer offset,
+                                                @RequestParam(value = "size", defaultValue = "10", required = false)
+                                                    @Min(1) @Max(50) Integer limit) {
+        return new ResponseEntity<>(itemServiceImpl.search(text, offset, limit),HttpStatus.OK);
     }
 
     @PostMapping("/{itemId}/comment")

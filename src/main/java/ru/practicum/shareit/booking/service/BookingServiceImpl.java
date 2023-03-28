@@ -2,6 +2,9 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDtoInput;
 import ru.practicum.shareit.booking.dto.BookingDtoMapper;
@@ -12,7 +15,6 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
@@ -23,9 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Primary
-class BookingServiceImpl implements BookingService  {
-
-    private final ItemService itemService;
+public class BookingServiceImpl implements BookingService  {
 
     private final BookingRepository bookingRepository;
 
@@ -89,20 +89,31 @@ class BookingServiceImpl implements BookingService  {
     }
 
     @Override
-    public List<BookingDto> getAllBookingsOfUser(Integer userId, String state) {
+    public List<BookingDto> getAllBookingsOfUser(Integer userId, String state, Integer offset, Integer limit) {
         getUser(userId);
-        List<Booking> allUserBookings = bookingRepository.findAllByBooker_IdOrderByStartDesc(userId);
+        if ((offset + 1) % limit == 0) {
+            offset = ((offset + 1) / limit) - 1;
+        } else if ((offset + 1) % limit != 0) {
+            offset = ((offset + 1) / limit);
+        }
+        Page<Booking> allUserBookings = bookingRepository.findAllByBooker_IdOrderByStartDesc(userId, PageRequest.of(offset, limit, Sort.by("id").ascending()));
         return getBookingsList(allUserBookings, state);
     }
 
     @Override
-    public List<BookingDto> getAllItemsBookingsOfOwner(Integer userId, String state) {
+    public List<BookingDto> getAllItemsBookingsOfOwner(Integer userId, String state, Integer offset, Integer limit) {
         getUser(userId);
         List<Item> userItems = itemRepository.findByOwner(getUser(userId));
-        if (itemService.personalItems(userId).isEmpty()) {
-            throw new ItemNotFoundException("ytn");
+        if (userItems.isEmpty()) {
+            throw new ItemNotFoundException("Item не найден");
         }
-        List<Booking> allBookings = bookingRepository.findAllByBooker_IdNotAndItemInOrderByStartDesc(userId, userItems);
+        if ((offset + 1) % limit == 0) {
+            offset = ((offset + 1) / limit) - 1;
+        } else if ((offset + 1) % limit != 0) {
+            offset = ((offset + 1) / limit);
+        }
+
+        Page<Booking> allBookings = bookingRepository.findAllByBooker_IdNotAndItemInOrderByStartDesc(userId, userItems, PageRequest.of(offset, limit, Sort.by("id").ascending()));
         return getBookingsList(allBookings, state);
     }
 
@@ -114,7 +125,7 @@ class BookingServiceImpl implements BookingService  {
 
     private User getUser(Integer itemId) {
         return userRepository.findById(itemId)
-            .orElseThrow(() -> new ItemNotFoundException("User id=%s не найден"));
+            .orElseThrow(() -> new UserNotFoundException("User id=%s не найден"));
     }
 
     private Item getItem(Integer itemId) {
@@ -122,13 +133,13 @@ class BookingServiceImpl implements BookingService  {
             .orElseThrow(() -> new ItemNotFoundException("Item id=%s не найден"));
     }
 
-    private List<BookingDto> mapListToDto(List<Booking> bookingList) {
+    private List<BookingDto> mapListToDto(Page<Booking> bookingList) {
         return bookingList.stream()
                 .map(bookingMapper:: toBookingDto)
                 .collect(Collectors.toList());
     }
 
-    private  List<BookingDto> getBookingsList(List<Booking> bookingList, String state) {
+    private  List<BookingDto> getBookingsList(Page<Booking> bookingList, String state) {
         LocalDateTime now = LocalDateTime.now();
         switch (state) {
             case "ALL":

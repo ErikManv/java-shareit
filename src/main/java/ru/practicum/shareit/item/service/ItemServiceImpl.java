@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dao.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingLinkDto;
 import ru.practicum.shareit.booking.dto.BookingLinkDtoMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.*;
+import ru.practicum.shareit.item.ItemController;
 import ru.practicum.shareit.item.dao.CommentRepository;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.dto.CommentDto;
@@ -18,7 +21,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.UserController;
+import ru.practicum.shareit.request.dao.ItemRequestRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
@@ -49,14 +53,20 @@ public class ItemServiceImpl implements ItemService {
 
     private final CommentMapper commentMapper;
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private final ItemRequestRepository itemRequestRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(ItemController.class);
 
     @Override
     public ItemDto addItem(ItemDto itemDto, Integer userId) {
         Item item = itemMapper.toItem(itemDto);
         item.setOwner(getUser(userId));
+        if (itemDto.getRequestId() != null) {
+            item.setRequest(getItemRequest(itemDto.getRequestId()));
+        }
+        itemRepository.save(item);
         log.info("предмет {} добавлен", itemDto.getName());
-        return itemMapper.toItemDto(itemRepository.save(item));
+        return itemMapper.toItemDto(item);
     }
 
     @Override
@@ -84,9 +94,14 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> personalItems(Integer userId) {
+    public List<ItemDto> personalItems(Integer userId, Integer offset, Integer limit) {
+        if ((offset + 1) % limit == 0) {
+            offset = ((offset + 1) / limit) - 1;
+        } else if ((offset + 1) % limit != 0) {
+            offset = ((offset + 1) / limit);
+        }
         List<ItemDto> itemList = new ArrayList<>();
-        for (Item i: itemRepository.findByOwner(getUser(userId))) {
+        for (Item i: itemRepository.findByOwner(getUser(userId), PageRequest.of(offset, limit, Sort.by("id").ascending()))) {
             itemList.add(setCommentToItem(setBookingToItem(itemMapper.toItemDto(i))));
         }
         log.info("список для пользователя {} получен", userId);
@@ -94,10 +109,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> search(String text) {
+    public List<ItemDto> search(String text, Integer offset, Integer limit) {
+        if ((offset + 1) % limit == 0) {
+            offset = ((offset + 1) / limit) - 1;
+        } else if ((offset + 1) % limit != 0) {
+            offset = ((offset + 1) / limit);
+        }
         log.info("поиск завершен");
         String textNew = text.toLowerCase().trim();
-        return itemRepository.findItemByNameContainsIgnoreCaseOrDescriptionContainsIgnoreCase(textNew, textNew).stream()
+        return itemRepository.findItemByNameContainsIgnoreCaseOrDescriptionContainsIgnoreCase(textNew, textNew, PageRequest.of(offset, limit, Sort.by("id").ascending())).stream()
                 .filter(Item::getAvailable)
                 .map(itemMapper::toItemDto)
                 .collect(Collectors.toList());
@@ -169,8 +189,13 @@ public class ItemServiceImpl implements ItemService {
             .orElseThrow(() -> new ItemNotFoundException("Item id=%s не найден"));
     }
 
-    private User getUser(Integer itemId) {
-        return userRepository.findById(itemId)
-            .orElseThrow(() -> new ItemNotFoundException("User id=%s не найден"));
+    private User getUser(Integer userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException("User id=%s не найден"));
+    }
+
+    private ItemRequest getItemRequest(Integer itemRequestId) {
+        return itemRequestRepository.findById(itemRequestId)
+            .orElseThrow(() -> new ItemNotFoundException("ItemRequest id=%s не найден"));
     }
 }

@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,9 +21,9 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     @Query("update Booking booking set booking.status = ?1  where booking.id = ?2")
     void update(Status status, Integer bookingId);
 
-    List<Booking> findAllByBooker_IdOrderByStartDesc(Integer bookerId);
+    Page<Booking> findAllByBooker_IdOrderByStartDesc(Integer bookerId, Pageable pageable);
 
-    List<Booking> findAllByBooker_IdNotAndItemInOrderByStartDesc(Integer userId, List<Item> ownerItems);
+    Page<Booking> findAllByBooker_IdNotAndItemInOrderByStartDesc(Integer userId, List<Item> ownerItems, Pageable pageable);
 
     List<Booking> findAllByItem_Id(Integer itemId);
 
