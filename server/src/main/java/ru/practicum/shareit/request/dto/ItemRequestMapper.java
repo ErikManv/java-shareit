@@ -7,8 +7,7 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.dto.UserMapper;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class, ItemMapper.class},
-    injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(componentModel = "spring")
 public interface ItemRequestMapper {
 
     @Mapping(target = "requesterId", source = "owner.id")
