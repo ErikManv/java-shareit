@@ -186,7 +186,7 @@ public class ItemServiceImpl implements ItemService {
 
     private Item getItem(Integer itemId) {
         return itemRepository.findById(itemId)
-            .orElseThrow(() -> new ItemNotFoundException("предмет "+ itemId + " не найден"));
+            .orElseThrow(() -> new ItemNotFoundException("предмет " + itemId + " не найден"));
     }
 
     private User getUser(Integer userId) {

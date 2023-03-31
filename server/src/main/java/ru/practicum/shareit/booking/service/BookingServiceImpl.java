@@ -126,7 +126,7 @@ public class BookingServiceImpl implements BookingService  {
 
     private Booking getBooking(Integer bookingId) {
         return bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new BookingNotFoundException("бронирование " + bookingId +" не найдено"));
+                .orElseThrow(() -> new BookingNotFoundException("бронирование " + bookingId + " не найдено"));
     }
 
     private User getUser(Integer userId) {
@@ -136,7 +136,7 @@ public class BookingServiceImpl implements BookingService  {
 
     private Item getItem(Integer itemId) {
         return itemRepository.findById(itemId)
-            .orElseThrow(() -> new ItemNotFoundException("предмет "+ itemId + " не найден"));
+            .orElseThrow(() -> new ItemNotFoundException("предмет " + itemId + " не найден"));
     }
 
     private List<BookingDto> mapListToDto(Page<Booking> bookingList) {
