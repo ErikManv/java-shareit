@@ -3,18 +3,11 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.markers.Create;
-import ru.practicum.shareit.markers.Update;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @RestController
@@ -26,7 +19,6 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<ItemDto> addItem(@RequestHeader ("X-Sharer-User-Id") Integer userId,
-                                           @Validated({Create.class})
                                            @RequestBody ItemDto itemDto) {
         return new ResponseEntity<>(itemServiceImpl.addItem(itemDto, userId), HttpStatus.OK);
     }
@@ -40,33 +32,32 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ResponseEntity<ItemDto> updateItem(@RequestHeader ("X-Sharer-User-Id") Integer userId,
                                               @RequestBody ItemDto itemDto,
-                                              @Validated({Update.class})
-                                                  @PathVariable Integer itemId) {
+                                              @PathVariable Integer itemId) {
         return new ResponseEntity<>(itemServiceImpl.updateItem(itemDto, itemId, userId), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<ItemDto>> allPersonalItems(@RequestHeader ("X-Sharer-User-Id") Integer userId,
                                                           @RequestParam(value = "from", defaultValue = "0", required = false)
-                                                          @Min(0) Integer offset,
+                                                          Integer offset,
                                                           @RequestParam(value = "size", defaultValue = "10", required = false)
-                                                              @Min(1) @Max(50) Integer limit) {
+                                                          Integer limit) {
         return new ResponseEntity<>(itemServiceImpl.personalItems(userId, offset, limit), HttpStatus.OK);
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<ItemDto>> search(@RequestParam(defaultValue = "±") String text,
                                                 @RequestParam(value = "from", defaultValue = "0", required = false)
-                                                @Min(0) Integer offset,
+                                                Integer offset,
                                                 @RequestParam(value = "size", defaultValue = "10", required = false)
-                                                    @Min(1) @Max(50) Integer limit) {
+                                                Integer limit) {
         return new ResponseEntity<>(itemServiceImpl.search(text, offset, limit),HttpStatus.OK);
     }
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<CommentDto> addComment(@PathVariable Integer itemId,
-                                 @NotEmpty @RequestHeader("X-Sharer-User-Id") Integer userId,
-                                 @Valid @RequestBody CommentDto commentDto) {
+                                                 @RequestHeader("X-Sharer-User-Id") Integer userId,
+                                                 @RequestBody CommentDto commentDto) {
         return new ResponseEntity<>(itemServiceImpl.addComment(itemId, userId, commentDto), HttpStatus.OK);
     }
 }

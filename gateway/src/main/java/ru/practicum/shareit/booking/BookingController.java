@@ -59,11 +59,11 @@ public class BookingController {
 
 	@GetMapping("/owner")
 	public ResponseEntity<Object> getAllItemsBookingsByOwner(@RequestHeader("X-Sharer-User-Id") Integer userId,
-																	   @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
-																	   @RequestParam(value = "from", defaultValue = "0",
-																		   required = false) @Min(0) Integer from,
-																	   @RequestParam(value = "size", defaultValue = "10",
-																		   required = false) @Min(1) @Max(50) Integer size) {
+															 @RequestParam(name = "state", defaultValue = "ALL") String stateParam,
+															 @RequestParam(value = "from", defaultValue = "0", required = false)
+																 @Min(0) Integer from,
+															 @RequestParam(value = "size", defaultValue = "10", required = false)
+																 @Min(1) @Max(50) Integer size) {
 		BookingState state = BookingState.from(stateParam)
 			.orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
 		log.info("Get booking of user with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);

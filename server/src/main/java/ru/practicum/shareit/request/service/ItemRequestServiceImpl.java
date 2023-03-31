@@ -1,6 +1,8 @@
 package ru.practicum.shareit.request.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -9,6 +11,7 @@ import ru.practicum.shareit.exception.ItemRequestNotFoundException;
 import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemShortMapper;
+import ru.practicum.shareit.request.ItemRequestController;
 import ru.practicum.shareit.request.dao.ItemRequestRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestMapper;
@@ -36,17 +39,21 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     private final ItemShortMapper itemShortMapper;
 
+    private static final Logger log = LoggerFactory.getLogger(ItemRequestController.class);
+
     @Override
     public ItemRequestDto addItemRequest(ItemRequestDto itemRequestDto, Integer userId) {
         ItemRequest itemRequest = new ItemRequest();
         itemRequest.setDescription(itemRequestDto.getDescription());
         itemRequest.setOwner(getUser(userId));
         itemRequest.setCreated(LocalDateTime.now());
+        log.info("запрос {} добавлен", itemRequestDto.getId());
         return itemRequestMapper.toDto(itemRequestRepository.save(itemRequest));
     }
 
     @Override
     public List<ItemRequestDto> getOwnRequests(Integer userId) {
+        log.info("запросы пользователя {}", userId);
         return itemRequestRepository.findByOwner(getUser(userId)).stream()
             .map(itemRequestMapper::toDto)
             .map(this::setItemsByRequest)
@@ -56,6 +63,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     public List<ItemRequestDto> getAllOthersRequests(Integer userId, Integer offset, Integer limit) {
+        log.info("запросы остальных пользователей");
         return itemRequestRepository.findAllByOwnerIdNot(userId,
             PageRequest.of(offset, limit, Sort.by("created").ascending())).stream()
             .map(itemRequestMapper::toDto)
@@ -66,6 +74,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public ItemRequestDto getRequestById(Integer requestId, Integer userId) {
         getUser(userId);
+        log.info("запрос {} возвращен", requestId);
         ItemRequestDto itemRequestDto = itemRequestMapper.toDto(getItemRequest(requestId));
         setItemsByRequest(itemRequestDto);
         return itemRequestDto;
@@ -80,11 +89,11 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     private User getUser(Integer userId) {
         return userRepository.findById(userId)
-            .orElseThrow(() -> new UserNotFoundException("User id=%s не найден"));
+            .orElseThrow(() -> new UserNotFoundException("пользователь " + userId + " не найден"));
     }
 
     private ItemRequest getItemRequest(Integer itemRequestId) {
         return itemRequestRepository.findById(itemRequestId)
-            .orElseThrow(() -> new ItemRequestNotFoundException("ItemRequest не найден"));
+            .orElseThrow(() -> new ItemRequestNotFoundException("запрос " + itemRequestId + " не найден"));
     }
 }

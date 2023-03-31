@@ -72,7 +72,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto updateItem(ItemDto itemUp, Integer itemId, Integer userId) {
         if (!getItem(itemId).getOwner().getId().equals(userId)) {
-            log.error("не совпадает с id {} владельца", userId);
             throw new UserValidationException("не совпадает с id владельца");
         }
         Item item = getItem(itemId);
@@ -86,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto getItemById(Integer itemId, Integer userId) {
         Item item = getItem(itemId);
-        log.info("предмет {} получен", itemId);
+        log.info("предмет {} возвращен", itemId);
         if (item.getOwner().getId().equals(userId)) {
             return setCommentToItem(setBookingToItem(itemMapper.toItemDto(getItem(itemId))));
         }
@@ -151,6 +150,7 @@ public class ItemServiceImpl implements ItemService {
         } else {
             throw new CommentWithoutBookingException("not");
         }
+        log.info("комментарий от пользователя {} добавлен", userId);
         return commentMapper.toDto(comment);
     }
 
@@ -186,16 +186,16 @@ public class ItemServiceImpl implements ItemService {
 
     private Item getItem(Integer itemId) {
         return itemRepository.findById(itemId)
-            .orElseThrow(() -> new ItemNotFoundException("Item id=%s не найден"));
+            .orElseThrow(() -> new ItemNotFoundException("предмет "+ itemId + " не найден"));
     }
 
     private User getUser(Integer userId) {
         return userRepository.findById(userId)
-            .orElseThrow(() -> new UserNotFoundException("User id=%s не найден"));
+            .orElseThrow(() -> new UserNotFoundException("пользователь " + userId + " не найден"));
     }
 
     private ItemRequest getItemRequest(Integer itemRequestId) {
         return itemRequestRepository.findById(itemRequestId)
-            .orElseThrow(() -> new ItemNotFoundException("ItemRequest id=%s не найден"));
+            .orElseThrow(() -> new ItemNotFoundException("запрос " + itemRequestId + " не найден"));
     }
 }

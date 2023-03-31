@@ -1,11 +1,14 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.BookingController;
 import ru.practicum.shareit.booking.dto.BookingDtoInput;
 import ru.practicum.shareit.booking.dto.BookingDtoMapper;
 import ru.practicum.shareit.booking.model.Status;
@@ -35,6 +38,8 @@ public class BookingServiceImpl implements BookingService  {
 
     private final BookingDtoMapper bookingMapper;
 
+    private static final Logger log = LoggerFactory.getLogger(BookingController.class);
+
     @Override
     public BookingDto addBooking(BookingDtoInput bookingDtoInput, Integer userId) {
         if (bookingDtoInput.getEnd().isBefore(bookingDtoInput.getStart()) ||
@@ -54,6 +59,7 @@ public class BookingServiceImpl implements BookingService  {
             .status(Status.WAITING)
             .build();
         if (item.getAvailable()) {
+            log.info("бронирование вещи {} создано", bookingDtoInput.getItemId());
             return bookingMapper.toBookingDto(bookingRepository.save(booking));
         } else {
             throw new ItemUnvailableException("item недоступен");
@@ -65,7 +71,7 @@ public class BookingServiceImpl implements BookingService  {
         Booking booking = getBooking(bookingId);
         Integer itemId = booking.getItem().getId();
         if (booking.getItem().getOwner().getId().equals(userId) && booking.getStatus().equals(Status.APPROVED)) {
-            throw new DoubleApprovalException("уже обновлен" + booking.getId());
+            throw new DoubleApprovalException("уже обновлено " + booking.getId());
         } else if (booking.getItem().getOwner().getId().equals(userId) && approved) {
             booking.setStatus(Status.APPROVED);
             bookingRepository.update(booking.getStatus(), bookingId);
@@ -120,17 +126,17 @@ public class BookingServiceImpl implements BookingService  {
 
     private Booking getBooking(Integer bookingId) {
         return bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new BookingNotFoundException("бронирование не найдено"));
+                .orElseThrow(() -> new BookingNotFoundException("бронирование " + bookingId +" не найдено"));
     }
 
-    private User getUser(Integer itemId) {
-        return userRepository.findById(itemId)
-            .orElseThrow(() -> new UserNotFoundException("User id=%s не найден"));
+    private User getUser(Integer userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException("пользователь " + userId + " не найден"));
     }
 
     private Item getItem(Integer itemId) {
         return itemRepository.findById(itemId)
-            .orElseThrow(() -> new ItemNotFoundException("Item id=%s не найден"));
+            .orElseThrow(() -> new ItemNotFoundException("предмет "+ itemId + " не найден"));
     }
 
     private List<BookingDto> mapListToDto(Page<Booking> bookingList) {

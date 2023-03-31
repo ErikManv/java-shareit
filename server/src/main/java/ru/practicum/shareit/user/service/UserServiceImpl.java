@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
         for (User user: repository.findAll()) {
             usersDto.add(userMapper.toUserDto(user));
         }
+        log.info("список пользователей возвращен");
         return usersDto;
     }
 
@@ -47,6 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Integer userId) {
+        log.info("пользователь {} возвращен", userId);
         return userMapper.toUserDto(getUser(userId));
     }
 
@@ -60,18 +62,19 @@ public class UserServiceImpl implements UserService {
             if (userDto.getEmail() != null) {
             user.setEmail(userDto.getEmail());
             }
-            log.info("пользователь {} обновлен", user.getName());
             repository.save(user);
-            return userMapper.toUserDto(user);
+            log.info("пользователь {} обновлен", user.getName());
+        return userMapper.toUserDto(user);
     }
 
     @Override
     public void delete(Integer userId) {
         repository.deleteById(userId);
+        log.info("пользователь {}  удален", userId);
     }
 
     private User getUser(Integer userId) {
         return repository.findById(userId)
-            .orElseThrow(() -> new UserNotFoundException("cf"));
+            .orElseThrow(() -> new UserNotFoundException("пользователь " + userId + " не найден"));
     }
 }
